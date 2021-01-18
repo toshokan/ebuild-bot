@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           path: ebuild-bot
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.BOT_TOKEN }}
       - name: Run a one-line script
         run: |
           git config --global user.name ebuild-bot
