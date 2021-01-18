@@ -18,10 +18,12 @@ jobs:
         with:
           path: ebuild-bot
           token: ${{ secrets.BOT_TOKEN }}
-      - name: Run a one-line script
+      - name: setup git config
         run: |
           git config --global user.name ebuild-bot
           git config --global user.email ebuild-bot@shojigate.net
+      - name: rust-analyzer-bin
+        run: |
           RELEASE=`curl --silent "https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest" | jq -r ".tag_name"`
           LAST_RELEASE=`cat ebuild-bot/rust-analyzer-bin/latest.txt`
           if [[ ${RELEASE} > ${LAST_RELEASE} ]]; then 
@@ -36,6 +38,27 @@ jobs:
             git add -A
             git commit -m "Updated dev-util/rust-analyzer-bin to ${RELEASE}"
             git push
+            cd ..
+          else
+            echo "OK"
+          fi
+      - name: vscodium-bin
+        run: |
+          RELEASE=`curl --silent "https://api.github.com/repos/VSCodium/vscodium/releases/latest" | jq -r ".tag_name"`
+          LAST_RELEASE=`cat ebuild-bot/vscodium-bin/latest.txt`
+          if [[ ${RELEASE} > ${LAST_RELEASE} ]]; then 
+            echo "Updating vscodium-bin"
+            cp ebuild-bot/vscodium-bin/vscodium-bin.ebuild.template tkn-overlay/app-editors/vscodium-bin/vscodium-bin-${RELEASE}.ebuild
+            cd tkn-overlay
+            git add -A
+            git commit -m "Update dev-util/vscodium-bin to ${RELEASE}"
+            git push
+            cd ../ebuild-bot
+            echo ${RELEASE} > vscodium-bin/latest.txt
+            git add -A
+            git commit -m "Updated app-editors/vscodium-bin to ${RELEASE}"
+            git push
+            cd ..
           else
             echo "OK"
           fi
