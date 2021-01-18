@@ -1,0 +1,39 @@
+name: Check Updates
+
+on:
+  workflow_dispatch:
+
+jobs:
+  get-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          repository: toshokan/tkn-overlay
+          path: tkn-overlay
+          token: ${{ secrets.BOT_TOKEN }}
+      - uses: actions/checkout@v2
+        with:
+          path: ebuild-bot
+          token: ${{ secrets.PAT }}
+      - name: Run a one-line script
+        run: |
+          git config --global user.name ebuild-bot
+          git config --global user.email ebuild-bot@shojigate.net
+          RELEASE=`curl --silent "https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest" | jq -r ".tag_name"`
+          LAST_RELEASE=`cat ebuild-bot/rust-analyzer-bin/latest.txt`
+          if [[ ${RELEASE} > ${LAST_RELEASE} ]]; then 
+            echo "Updating rust-analyzer-bin"
+            cp ebuild-bot/rust-analyzer-bin/rust-analyzer-bin.ebuild.template tkn-overlay/dev-util/rust-analyzer-bin/rust-analyzer-bin-${RELEASE//-/.}.ebuild
+            cd tkn-overlay
+            git add -A
+            git commit -m "Update dev-util/rust-analyzer-bin to ${RELEASE}"
+            git push
+            cd ../ebuild-bot
+            echo ${RELEASE} > rust-analyzer-bin/latest.txt
+            git add -A
+            git commit -m "Updated dev-util/rust-analyzer-bin to ${RELEASE}"
+            git push
+          else
+            echo "OK"
+          fi
