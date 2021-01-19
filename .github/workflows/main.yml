@@ -51,7 +51,7 @@ jobs:
             cp ebuild-bot/vscodium-bin/vscodium-bin.ebuild.template tkn-overlay/app-editors/vscodium-bin/vscodium-bin-${RELEASE}.ebuild
             cd tkn-overlay
             git add -A
-            git commit -m "Update dev-util/vscodium-bin to ${RELEASE}"
+            git commit -m "Update app-editors/vscodium-bin to ${RELEASE}"
             git push
             cd ../ebuild-bot
             echo ${RELEASE} > vscodium-bin/latest.txt
