@@ -26,7 +26,7 @@ jobs:
         run: |
           RELEASE=`curl --silent "https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest" | jq -r ".tag_name"`
           LAST_RELEASE=`cat ebuild-bot/rust-analyzer-bin/latest.txt`
-          if [[ ${RELEASE} > ${LAST_RELEASE} -a ${RELEASE} != "null" ]]; then 
+          if [[ ${RELEASE} > ${LAST_RELEASE} ]] && [ ${RELEASE} != "null" ]; then 
             echo "Updating rust-analyzer-bin"
             cp ebuild-bot/rust-analyzer-bin/rust-analyzer-bin.ebuild.template tkn-overlay/dev-util/rust-analyzer-bin/rust-analyzer-bin-${RELEASE//-/.}.ebuild
             cd tkn-overlay
@@ -46,7 +46,7 @@ jobs:
         run: |
           RELEASE=`curl --silent "https://api.github.com/repos/VSCodium/vscodium/releases/latest" | jq -r ".tag_name"`
           LAST_RELEASE=`cat ebuild-bot/vscodium-bin/latest.txt`
-          if [[ ${RELEASE} > ${LAST_RELEASE} -a ${RELEASE} != "null" ]]; then 
+          if [[ ${RELEASE} > ${LAST_RELEASE} ]] && [ ${RELEASE} != "null" ]; then 
             echo "Updating vscodium-bin"
             cp ebuild-bot/vscodium-bin/vscodium-bin.ebuild.template tkn-overlay/app-editors/vscodium-bin/vscodium-bin-${RELEASE}.ebuild
             cd tkn-overlay
