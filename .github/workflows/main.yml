@@ -24,7 +24,7 @@ jobs:
           git config --global user.email ebuild-bot@shojigate.net
       - name: rust-analyzer-bin
         run: |
-          RELEASE=`curl --silent "https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest" | jq -r ".tag_name"`
+          RELEASE=`curl -L --silent "https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest" | jq -r ".tag_name"`
           LAST_RELEASE=`cat ebuild-bot/rust-analyzer-bin/latest.txt`
           echo "Release: ${RELEASE}, Last = ${LAST_RELEASE}"
           if [[ ${RELEASE} > ${LAST_RELEASE} ]] && [ ${RELEASE} != "null" ]; then 
@@ -45,7 +45,7 @@ jobs:
           fi
       - name: vscodium-bin
         run: |
-          RELEASE=`curl --silent "https://api.github.com/repos/VSCodium/vscodium/releases/latest" | jq -r ".tag_name"`
+          RELEASE=`curl -L --silent "https://api.github.com/repos/VSCodium/vscodium/releases/latest" | jq -r ".tag_name"`
           LAST_RELEASE=`cat ebuild-bot/vscodium-bin/latest.txt`
           if [[ ${RELEASE} > ${LAST_RELEASE} ]] && [ ${RELEASE} != "null" ]; then 
             echo "Updating vscodium-bin"
